@@ -1,0 +1,97 @@
+﻿@model FirstScent.Models.FragranceTypeViewModel
+
+<style>
+    .list-item-border {
+        border: 1px solid #000;
+        padding: 5px;
+        margin: 5px;
+        display: inline; /* Use flexbox for vertical and horizontal centering */
+        justify-content: center; /* Center the text horizontally */
+        align-items: center; /* Center the text vertically */
+        width: 50px;
+    }
+
+        .list-item-border a {
+            text-decoration: none;
+            color: black;
+        } 
+        
+</style>
+<div class="container">
+    @* <div class="row">
+    <div class="col-sm-12 col-xs-12">
+
+    <ul class="brand_char">
+    <li class="list-item-border"><a href="#0-9">#</a></li>
+    <li class="list-item-border"><a href="#A">A</a></li>
+    <li class="list-item-border"><a href="#B">B</a></li>
+    <li class="list-item-border"><a href="#C">C</a></li>
+    <li class="list-item-border"><a href="#D">D</a></li>
+    <li class="list-item-border"><a href="#E">E</a></li>
+    <li class="list-item-border"><a href="#F">F</a></li>
+    <li class="list-item-border"><a href="#G">G</a></li>
+    <li class="list-item-border"><a href="#H">H</a></li>
+    <li class="list-item-border"><a href="#I">I</a></li>
+    <li class="list-item-border"><a href="#J">J</a></li>
+    <li class="list-item-border"><a href="#K">K</a></li>
+    <li class="list-item-border"><a href="#L">L</a></li>
+    <li class="list-item-border"><a href="#M">M</a></li>
+    <li class="list-item-border"><a href="#N">N</a></li>
+    <li class="list-item-border"><a href="#O">O</a></li>
+    <li class="list-item-border"><a href="#P">P</a></li>
+    <li class="list-item-border"><a href="#Q">Q</a></li>
+    <li class="list-item-border"><a href="#R">R</a></li>
+    <li class="list-item-border"><a href="#S">S</a></li>
+    <li class="list-item-border"><a href="#T">T</a></li>
+    <li class="list-item-border"><a href="#U">U</a></li>
+    <li class="list-item-border"><a href="#V">V</a></li>
+    <li class="list-item-border"><a href="#W">W</a></li>
+    <li class="list-item-border"><a href="#X">X</a></li>
+    <li class="list-item-border"><a href="#Y">Y</a></li>
+    <li class="list-item-border"><a href="#Z">Z</a></li>
+    </ul>
+    </div>
+    </div> *@
+    <div class="row">
+        <ul class="brand_char">
+            <li class="list-item-border"><a href="#0-9">#</a></li>
+
+            @{
+                foreach (var letter in Model.Brand
+                .Select(b => b.Text.Substring(0, 1))
+                .Distinct()
+                .OrderBy(c => c))
+                {
+                    <li class="list-item-border"><a href="#@letter">@letter</a></li>
+
+                }
+            }
+        </ul>
+
+    </div>
+    <div class="row">
+        @{
+            foreach (var letter in Model.Brand
+            .Select(b => b.Text.Substring(0, 1))
+            .Distinct()
+            .OrderBy(c => c))
+            {
+                <div class="col-12" id="@letter">
+                    <hr />
+                    <h3>@letter</h3>
+                    <hr />
+
+                    @foreach (var brand in Model.Brand.Where(b => b.Text.StartsWith(letter)))
+                    {
+                        <a href="@Url.Action("SortFragrances", "Brands", new { brandName = brand.Text })" style="text-decoration:none; color:black">
+
+                            <p>@brand.Text</p>
+                        </a>
+
+                    }
+                </div>
+            }
+        }
+    </div>
+
+</div>

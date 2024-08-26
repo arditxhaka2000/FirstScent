@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - First Scent</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FirstScent.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <style>
+        /* Remove margin and padding for both navigation bars */
+        .navbar {
+            margin-bottom: 0;
+            padding: 0;
+        }
+
+        .submenu {
+            display: none;
+            z-index: 1;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item:hover .submenu {
+            display: block;
+            position: absolute;
+            background-color: white;
+            left: 0;
+            z-index:999
+        }
+
+        .submenu a {
+            text-decoration: none;
+            color: black
+        }
+
+    </style>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Hello" asp-action="Index" style="font-size:60px">
+                    <img src="/Images/FirstScent/image1.jpg" width="130" height="130" class="d-inline-block align-top" alt="">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <div class="mx-auto">
+                        <!-- Centered content -->
+                        <ul class="navbar-nav">
+                            <!-- Home and Fragrances links remain on the left -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index" style="font-size:30px">Home</a>
+                            </li>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Fragrance" asp-action="Index" style="font-size:30px">Fragrances</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Orders" style="font-size:30px">Orders</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <!-- Cart and Login links aligned to the right -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("ShoppingCart", "Fragrance")">
+                                <img src="/Images/shopping-cart.png" style="max-width:45px;max-height:45px;" alt="Cart" />
+                                <span id="cartItemCount" class="count" style="color:red"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <select class="nav-link" onchange="location = this.value;" style="border:none">
+                                    <option value="" disabled selected>Menu</option>
+                                    <option value="@Url.Action("UserDashboard", "Users", new { section = "personal-info" })">My Account</option>
+                                    <option value="@Url.Action("Logout", "Users")">Logout</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Login" style="font-size:30px">Login</a>
+                            }
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-sm navbar-light bg-dark border-bottom box-shadow mb-lg-5">
+            <div class="container-fluid">
+                <ul class="navbar-nav mx-auto flex-row">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="color:white">Men</a>
+                        <div class="submenu col-12" style="">
+                            <div class="row">
+                                <div class="col-6 mx-lg-4">
+                                    <div class="col-6">
+                                        <h2><a href="/mens/" style="text-decoration:none;color:black"> Men's Fragrance</a></h2>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="/mens/"> Shop All Men's</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="/mens/NewIn"> New In</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="/mens/BestSellers"> BestSellers</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="/mens/Luxury"> Luxury</a>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="col-6">
+                                        <h2><a href="@Url.Action("Brand", "Brands")" style="text-decoration:none;color:black"> Favourite Brands</a></h2>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="@Url.Action("Male", "Brands", new { brandName = "Chanel" })">Chanel</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="@Url.Action("Male", "Brands", new { brandName = "Dior" })">Dior</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="@Url.Action("Male", "Brands", new { brandName = "Yves Saint Laurent" })">Yves Saint Laurent</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="@Url.Action("Male", "Brands", new { brandName = "Armani" })">Armani</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="color:white">Female</a>
+                        <div class="submenu col-12" style="">
+                            <div class="row">
+                                <div class="col-6 mx-lg-4">
+                                    <div class="col-6">
+                                        <h2><a href="/womens/" style="text-decoration:none;color:black"> Women's Fragrance</a></h2>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="/womens/"> Shop All Women's</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="/womens/NewIn"> New In</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="/womens/BestSellers"> BestSellers</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="/womens/Luxury"> Luxury</a>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="col-6">
+                                        <h2><a href="@Url.Action("Brand", "Brands")" style="text-decoration:none;color:black"> Favourite Brands</a></h2>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="@Url.Action("Female", "Brands", new { brandName = "Chanel" })">Chanel</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="@Url.Action("Female", "Brands", new { brandName = "Dior" })">Dior</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="@Url.Action("Female", "Brands", new { brandName = "Yves Saint Laurent" })">Yves Saint Laurent</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="" href="@Url.Action("Female", "Brands", new { brandName = "Tom Ford" })">Tom Ford</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="color:white">Unisex</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+
+
+    </header>
+
+    @RenderBody()
+    <hr />
+    <footer class="mt-lg-5 mb-5">
+        <div class="row">
+            <div class="col-7 col-md-3 mb-3 ms-3">
+                <h5>My Account</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="@Url.Action("UserDashboard", "Users")" class="nav-link p-0 text-muted small" style="font-size:15px">My Account</a></li>
+                    <li class="nav-item mb-2"><a href="@Url.Action("UserDashboard", "Users", new { section = "wishlist" })" class="nav-link p-0 text-muted" style="font-size:15px">Wishlist</a></li>
+                    <li class="nav-item mb-2"><a href="@Url.Action("UserDashboard", "Users", new { section = "orders" })" class="nav-link p-0 text-muted" style="font-size:15px">Order History</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-size:15px">About Us</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-size:15px">Login</a></li>
+                </ul>
+            </div>
+
+            <div class="col-7 col-md-4 mb-3 ms-3">
+                <h5>Top Links</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-size:15px">Men's Fragrances</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-size:15px">Women's Fragrances</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-size:15px">All Brands</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted" style="font-size:15px">Luxury</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <form>
+                    <h5>Subscribe to our newsletter</h5>
+                    <p>Monthly digest of what's new and exciting from us.</p>
+                    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                        <label for="newsletter1" class="visually-hidden">Email address</label>
+                        <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between border-top">
+            <p>© 2022 Company, Inc. All rights reserved.</p>
+            <ul class="list-unstyled d-flex">
+                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
+                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
+                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function updateCartItemCountViaAjax() {
+            $.ajax({
+                url: '@Url.Action("GetCartItemCount", "Fragrance")',
+                type: 'GET',
+                success: function (data) {
+                    var cartItemCountElement = document.getElementById('cartItemCount');
+                    if (cartItemCountElement) {
+                        cartItemCountElement.textContent = data;
+                    }
+                },
+                error: function () {
+                    // Handle error if necessary
+                }
+            });
+        }
+
+
+        // Call the function to update the cart item count when the page loads
+        $(document).ready(function () {
+            updateCartItemCountViaAjax();
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

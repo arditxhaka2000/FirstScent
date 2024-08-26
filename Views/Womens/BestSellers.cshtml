@@ -1,0 +1,277 @@
+﻿@model FirstScent.Models.FragranceTypeViewModel
+
+<style>
+
+    select {
+        border: none;
+    }
+
+    #myInput {
+        padding: 20px;
+        margin-top: -6px;
+        border: 0;
+        border-radius: 0;
+        background: #f1f1f1;
+    }
+
+    #malecard {
+        width: 18rem;
+        margin-right: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 14px;
+    }
+
+    @@media (max-width: 600px) {
+        #malecard {
+            width: 13rem;
+        }
+    }
+
+    p {
+        font-size: 15px !important;
+    }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h2 id="fragrancesToggle">Best Sellers</h2>
+        </div>
+    </div>
+    <div class="row mt-5 mb-5 d-flex justify-content-center">
+        <div class="col-8">
+            <p id="fragrancesParagraph">Explore our extensive men's aftershave collection and all other men’s fragrances. Discover classic and new, innovative men's fragrances from renowned designer brands like Dior, Chanel, Yves Saint Laurent, Paco Rabanne, Versace, Prada and Tom Ford, among other top names. Whether you're shopping for yourself or seeking the perfect gift, find the perfect fragrance in our men's aftershave collection.</p>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex">
+            <div class="col-3">
+                <h2>Filters</h2>
+
+            </div>
+            <div class="col-9 d-flex justify-content-end">
+
+                <select id="sortSelect" name="sortingOption" onchange="applyFilters()" style="font-size:20px">
+                    <option value="BestSeller">Best Seller</option>
+                    <option value="PriceHighToLow">Price High to Low</option>
+                    <option value="PriceLowToHigh">Price Low to High</option>
+                    <option value="NameAToZ">Product Name A to Z</option>
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+    <hr />
+    <div class="row mt-lg-5" style="background: #f1f1f1;">
+        <div class="col-3">
+            <div id="brandFilter" class="dropdown" style="text-align:center">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: #f1f1f1;color: black;border: none;font-size: 19px;">
+                    Brands
+                </button>
+                <ul class="dropdown-menu" style="max-height: 150px;overflow-y: auto;">
+                    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+                    @{
+                        foreach (var letter in Model.Brand
+                        .Select(b => b.Text.Substring(0, 1))
+                        .Distinct()
+                        .OrderBy(c => c))
+                        {
+
+                            @foreach (var brand in Model.Brand.Where(b => b.Text.StartsWith(letter)))
+                            {
+                                <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">@brand.Text</label></li>
+                            }
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-3">
+            <div id="categoryFilter" class="dropdown" style="text-align:center">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: #f1f1f1;color: black;border: none;font-size: 19px;">
+                    Category
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" style="text-decoration:none;color:black">Eau De Toilette</a></li>
+                    <li><a href="#" style="text-decoration:none;color:black">Eau De Parfum</a></li>
+                    <li><a href="#" style="text-decoration:none;color:black">Parfum</a></li>
+                    <li><a href="#" style="text-decoration:none;color:black">Eau De Cologne</a></li>
+                </ul>
+            </div>
+        </div><div class="col-3">
+            <div id="priceFilter" class="dropdown" style="text-align:center">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: #f1f1f1;color: black;border: none;font-size: 19px;">
+                    Price
+                </button>
+                <ul class="dropdown-menu">
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">0€-10€</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">10€-20€</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">20€-50€</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">50€-100€</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">100€-150€</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">>150€</label>
+                </ul>
+            </div>
+        </div><div class="col-3">
+            <div id="sizeFilter" class="dropdown" style="text-align:center">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: #f1f1f1;color: black;border: none;font-size: 19px;">
+                    Size
+                </button>
+                <ul class="dropdown-menu" style="max-height: 150px;overflow-y: auto;">
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">15ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">20ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">30ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">40ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">50ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">60ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">75ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">90ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">100ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">125ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">150ml</label>
+                    <li><input type="checkbox" id="brandOption1" class="filter-checkbox"> <label for="brandOption1">200ml</label>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="fragrancesSection" class="row mt-lg-5">
+        <div class="col-12">
+            <div class="row">
+                @{
+                    var femaleFragrances = Model.Fragrances!.Where(f => f.Category == "Female").ToList();
+
+                    foreach (var fragrance in femaleFragrances)
+                    {
+                        var imageExtension = "jpg";
+                        string imagePath = "/Images/" + fragrance.Brand + "/" + fragrance.Name!.Replace(" ", "");
+                        if (File.Exists(imagePath + ".jpg"))
+                        {
+                            imageExtension = "jpg";
+                        }
+                        else if (File.Exists(imagePath + ".png"))
+                        {
+                            imageExtension = "png";
+                        }
+                        string imageUrl = imagePath + "." + imageExtension;
+
+                        <div class="card" id="malecard" data-price="@fragrance.Price" data-name="@fragrance.Name">
+
+                            <a href="@Url.Action("Details", "Fragrance", new { id = fragrance.Id })" style="color: black; text-decoration: none; text-align: center;">
+                                <img class="card-img-top" src="@imageUrl" alt="Image">
+                                <div class="card-body">
+                                    <p style="font-weight: bold; font-size: 25px">@Model.FragranceBrand</p>
+                                    <p>@fragrance.Name</p>
+                                    <p>@fragrance.Price€</p>
+                                </div>
+
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        // Toggle the visibility of the paragraph when the heading is clicked
+        $('#fragrancesToggle').click(function () {
+            $('#fragrancesParagraph').toggle();
+        });
+    });
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".dropdown-menu li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+    $(document).ready(function () {
+        // Add change event to each checkbox
+        $(".dropdown-menu").on("change", ".filter-checkbox", function () {
+            applyFilters();
+        });
+    });
+
+    function applyFilters() {
+        var selectedBrands = getSelectedOptions("brandFilter");
+        var selectedCategory = getSelectedOptions("categoryFilter");
+        var selectedPrice = getSelectedOptions("priceFilter");
+        var selectedSize = getSelectedOptions("sizeFilter");
+        var selectedSortingOption = $("#sortSelect").val();
+
+
+        // Get other selected values similarly for other filters
+
+        // Make an AJAX request to the FilterFragrances action with the selected options
+        $.ajax({
+            url: '@Url.Action("FilterBestSellerFragrances", "Womens")',
+            data: { brand: selectedBrands, category: selectedCategory, price: selectedPrice, size: selectedSize, sortingOption: selectedSortingOption },
+            type: 'POST',
+            success: function (data) {
+                displayFilteredFragrances(data);
+            }
+        });
+    }
+
+    function getSelectedOptions(filterId) {
+        var selectedOptions = [];
+        $("#" + filterId + " .filter-checkbox:checked").each(function () {
+            selectedOptions.push($(this).next('label').text().trim());
+        });
+        return selectedOptions;
+    }
+    function displayFilteredFragrances(fragrances) {
+        $("#fragrancesSection").empty();
+        function ImageExist(url) {
+            var img = new Image();
+            img.src = url;
+            return img.height != 0;
+        }
+
+        // Add a single row outside the forEach loop
+        $("#fragrancesSection").append('<div class="row mt-lg-5">');
+
+        fragrances.forEach(function (fragrance) {
+            if (fragrance.name) {
+                var imagePath = "/Images/" + fragrance.brand + "/" + fragrance.name.replace(/ /g, '');
+                var imageExtension = "";
+                if (ImageExist(imagePath + ".jpg")) {
+                    imageExtension = "jpg";
+                } else if (ImageExist(imagePath + ".png")) {
+                    imageExtension = "png";
+                }
+
+                var imageUrl = imagePath + "." + imageExtension;
+
+                var fragranceHtml = `
+                                                    <div class="card" id="malecard" data-price="${fragrance.price}" data-name="${fragrance.name}">
+                                                    <a href="/Fragrance/Details/${fragrance.id}" style="color: black; text-decoration: none; text-align: center;">
+                                                            <img class="card-img-top" src="${imageUrl}" alt="Image">
+                                                                 <div class="card-body">
+                                                        <p style="font-weight: bold; font-size: 20px">@Model.FragranceBrand</p>
+                                                        <p>${fragrance.name}</p>
+                                                            <p>${fragrance.price}&#8364</p>
+                                                            </div>
+                                                    </a>
+                                            </div>`;
+
+                $("#fragrancesSection .row").append(fragranceHtml);
+            }
+        });
+
+        // Close the row
+        $("#fragrancesSection").append('</div>');
+
+    }
+</script>

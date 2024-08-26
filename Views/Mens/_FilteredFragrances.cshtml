@@ -1,0 +1,113 @@
+﻿@model FirstScent.Models.FragranceTypeViewModel
+
+<style>
+    .pagination > li > a {
+        background-color: white;
+        color: #5A4181;
+    }
+
+        .pagination > li > a:focus,
+        .pagination > li > a:hover,
+        .pagination > li > span:focus,
+        .pagination > li > span:hover {
+            color: #5a5a5a;
+            background-color: #eee;
+            border-color: #ddd;
+        }
+
+    .pagination > .active > a {
+        color: white;
+        background-color: #5A4181 !Important;
+        border: solid 1px #5A4181 !Important;
+    }
+
+        .pagination > .active > a:hover {
+            background-color: #5A4181 !Important;
+            border: solid 1px #5A4181;
+        }
+</style>
+
+<div id="fragrancesSection" class="row mt-lg-5">
+    <div class="col-12">
+        <div class="row d-flex justify-content-center">
+            @{
+                var maleFragrances = Model.Fragrances!.Where(f => f.Category == "Male").ToList();
+
+                foreach (var fragrance in maleFragrances)
+               {
+                            <div class="card" id="malecard" data-price="@fragrance.Price" data-name="@fragrance.Name">
+
+                                <a href="@Url.Action("Details", "Fragrance", new { id = fragrance.Id })" style="color: black; text-decoration: none; text-align: center;">
+                                    <img class="card-img-top" src="@fragrance.PictureUrl" alt="Image">
+                                    <div class="card-body">
+                                        <p style="font-weight: bold; font-size: 25px">@Model.FragranceBrand</p>
+                                        <p>@fragrance.Name</p>
+                                        <p>@fragrance.Price€</p>
+                                    </div>
+
+                                </a>
+                            </div>
+                }
+            }
+
+        </div>
+        <div class="pagination">
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                        <input type="hidden" id="selectedBrands" value='@Json.Serialize(Model.SelectedBrands)' />
+                        <input type="hidden" id="selectedCategory" value='@Json.Serialize(Model.SelectedCategory)' />
+                        <input type="hidden" id="selectedPrice" value='@Json.Serialize(Model.SelectedPrice)' />
+                        <input type="hidden" id="selectedSize" value='@Json.Serialize(Model.SelectedSize)' />
+
+                        <a class="page-link" onclick="applyFilter(@i, 6, '@Model.SortOption')">@(i)</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    function applyFilter(pageIndex, pageSize, selectedSortingOption) {
+        const fContainer = $('#fragrancesSection');
+
+        // Retrieve serialized arrays from hidden inputs
+        const selectedBrands = JSON.parse($('#selectedBrands').val());
+        const selectedCategory = JSON.parse($('#selectedCategory').val());
+        const selectedPrice = JSON.parse($('#selectedPrice').val());
+        const selectedSize = JSON.parse($('#selectedSize').val());
+        let urlA = null;
+
+        if ('@Model.FilterAction' === "default") {
+            urlA = '@Url.Action("FilterFragrances", "Mens")'
+        } else if ('@Model.FilterAction' === "bestSellers") {
+            urlA = '@Url.Action("FilterBestSellerFragrances", "Mens")'
+        } else if ('@Model.FilterAction' === "newIn") {
+            urlA = '@Url.Action("FilterNewInFragrances", "Mens")'
+        }
+
+        $.ajax({
+            url: urlA ,
+            data: {
+                brand: selectedBrands,
+                category: selectedCategory,
+                price: selectedPrice,
+                size: selectedSize,
+                sortingOption: selectedSortingOption,
+                pageIndex: pageIndex,
+                pageSize: pageSize
+            },
+            method: 'POST',
+            success: function (data) {
+                $('#fragrancesSection').html(data);
+
+            },
+            error: function () {
+                // Handle error
+            }
+        });
+    }
+
+
+</script>

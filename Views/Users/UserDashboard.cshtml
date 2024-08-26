@@ -1,0 +1,734 @@
+﻿@using Newtonsoft.Json;
+@model FirstScent.Models.ApplicationUser
+
+
+<style>
+    /* Style the <li> elements as buttons */
+    ul.list li {
+        list-style: none;
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        /* Add a hover effect */
+        ul.list li:hover {
+            background-color: #0056b3;
+        }
+    /* CSS for the overlay */
+    #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        z-index: 999; /* Ensure it's above other content */
+    }
+
+    /* CSS for the centered form */
+    .card-form {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        background: #fff; /* Background color of the form */
+        padding: 40px; /* Add padding as needed */
+        border-radius: 10px; /* Rounded corners for the form */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Add a shadow for depth */
+        z-index: 1000; /* Ensure it's above the overlay */
+        width: 80%; /* Set the width of the card */
+        max-width: 700px; /* Set the maximum width of the card */
+        height: 600px;
+    }
+
+    /* CSS for the close button */
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    @@media (max-width: 1366px) {
+        .card-form {
+            width: 80%; /* Set the width of the card */
+            height: 600px;
+        }
+            /* Adjust specific styles for smaller screens if necessary */
+            .card-form.form-control {
+            }
+    }
+
+    .form-control {
+        border: none;
+        border-bottom: 1px solid #000; /* You can adjust the color as needed */
+        border-radius: 0; /* Ensure no border-radius */
+        box-shadow: none; /* Remove any box-shadow */
+    }
+
+    #cardOrder {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        /* Style for Porosite (left element) */
+        #cardOrder .col-lg-2:first-child {
+            margin-right: 500px;
+        }
+
+        /* Style for select (middle element) */
+        #cardOrder .col-md-auto {
+            /* Add any additional styling you need */
+        }
+
+        /* Style for input (right element) */
+        #cardOrder .col-lg-2:last-child {
+            /* Add any additional styling you need */
+        }
+
+    #porosiaCard {
+        width: 10rem;
+    }
+
+    /* Media query for screens with a maximum width of 767 pixels (typical for mobile devices) */
+    @@media (max-width: 767px) {
+        #porosiaCard {
+            width: 40%;
+        }
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-5 col-sm-12">  
+            <div class="border p-3">
+                <p class="text-base tablet:text-lg font-semibold tablet:font-medium truncate">Tung @Model.FirstName</p>
+                <p class="text-sm">Faleminderit që je pjesë e jona</p>
+            </div>
+            <ul class="list flex flex-col p-3 gap-2">
+                <li data-content="personal-info">
+                    <i>Te dhenat personale</i>
+                </li>
+                <li data-content="orders">
+                    <i>Porosite</i>
+                </li>
+                <li data-content="addresses">
+                    <i>Adresat</i>
+                </li>
+                <li data-content="wishlist">
+                    <i>Lista e deshirave</i>
+                </li>
+                <li data-content="change-password" style="text-decoration:none">
+                    <a href="@Url.Action("ChangePassword", "Users")">
+                        <i style="color:white">Ndrysho fjalekalimin</i>
+                    </a>
+                </li>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li data-content="admin-dashboard">
+                        <i>ADMIN</i>
+                    </li>
+                }
+
+            </ul>
+        </div>
+        <div class="col-lg-7 col-sm-12">
+            <div class="row m-lg-4">
+                <div id="personal-info" class="content-section" style="display: @(ViewBag.ActiveSection == "personal-info" ? "block" : "none")">
+                    <div class="row">
+                        <div class="col-12 mb-lg-5">
+                            <h2>Te dhenat tuaja personale</h2>
+                        </div>
+                        <div class="form-row d-flex">
+                            <div class="form-group col-md-5 mb-xl-5">
+                                <label for="Name">Emri</label>
+                                <input type="text" class="form-control" id="UName" name="Address.Name" value="@Model.FirstName">
+                            </div>
+                            <div class="form-group col-md-5 offset-md-2">
+                                <label for="LastName">Mbiemri</label>
+                                <input type="text" class="form-control" id="ULastName" value="@Model.LastName">
+                            </div>
+                        </div>
+                        <div class="form-row d-flex">
+                            <div class="form-group col-md-5">
+                                <label for="Email">Email</label>
+                                <input type="text" class="form-control" id="Email" name="Address.Email" value="@Model.Email" readonly>
+                            </div>
+                        </div>
+                        <div class="form-row d-flex">
+                            <div class="form-group col-md-1 mt-xl-5">
+                                <button id="updateUserInfoButton" class="btn-dark w-100">Ruaj</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div id="orders" class="content-section" style="display: @(ViewBag.ActiveSection == "orders" ? "block" : "none");">
+                    <div class="row flex-row mb-lg-5">
+                        <div class="col-12">
+                            <p style="font-size:20px;">Porosite</p>
+                        </div>
+                        <div class="col-12 mt-2">
+                            @* <div class="d-flex justify-content-end"> *@
+                            <select id="OrderStatus" class="select">
+                                <option value="-1">Të gjitha</option>
+                                <option value="0">Në proces</option>
+                                <option value="1">Të perfunduara</option>
+                            </select>
+                            <input type="text" placeholder="Kerko" class="ml-2">
+                            @* </div> *@
+                        </div>
+                    </div>
+                    <div id="orderPlace"></div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center" id="orders-pagination"></ul>
+                    </nav>
+                    @* @Html.RenderPartialAsync("_OrderItemsPartial", Model.Orders) *@
+
+                    <script>
+                        function loadOrders(page, searchValue) {
+                            const ordersContainer = $('#orderPlace');
+
+                            $.ajax({
+                                url: `/Users/IndexPagination?page=${page}&search=${searchValue}`,
+                                method: 'GET',
+                                success: function (data) {
+                                    // Update the orders container with the new orders
+                                    $('#orderPlace').html(data);
+
+                                },
+                                error: function () {
+                                }
+                            });
+                        }
+
+                        // Function to generate pagination links
+                        function generateOrdersPaginationLinks(totalPages) {
+                            const paginationContainer = $('#orders-pagination');
+                            console.log(paginationContainer);
+                            paginationContainer.html('');
+
+                            const ul = $('<ul class="pagination"></ul>');
+
+                            for (let i = 1; i <= totalPages; i++) {
+                                const li = $(`<li class="page-item"><a class="page-link" data-page="${i}">${i}</a></li>`);
+                                li.on('click', function () {
+                                    const page = $(this).find('a').data('page');                                 
+                                    loadOrders(page);
+                                });
+
+                                ul.append(li);
+                            }
+
+                            paginationContainer.append(ul);
+                        }
+                        $(document).ready(function () {
+                            // Initial load (assuming you have a default action that returns the first page)
+                            loadOrders(1);
+
+                            // Retrieve totalItems from the model
+                            const totalItems = @Model.Orders.Count();
+                            const totalPages = Math.ceil(totalItems / 2);
+
+                            // Initial pagination links
+                            generateOrdersPaginationLinks(totalPages);
+                        });
+                    </script>
+                   
+                </div>
+               
+                <div id="addresses" class="content-section" style="display: @(ViewBag.ActiveSection == "addresses" ? "block" : "none")">
+                    <div class="row mb-5">
+                        <div class="col-6">
+                            Adresat
+                        </div>
+                        <div class="col-6 text-end">
+                            <button id="addAddressLink">Shto të re</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @if (Model.Adresses == null || Model.Adresses.Count == 0)
+                        {
+                            <p class="text-center" style="font-size: 24px;">There are no addresses.</p>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < Model.Adresses.Count; i += 2)
+                            {
+                                <div class="col-5 mb-lg-5">
+                                    <div class="row" style="border: solid; border-color: darkgrey; padding: 10px; position: relative;">
+                                        <div class="col-12" style="position: absolute; top: 0px; right: 0px;">
+                                            <button id="editAddress" onclick="editAddress('@JsonConvert.SerializeObject(Model.Adresses[i])')" style="font-size: 12px">Edit</button>
+                                            <button onclick="deleteAddress('@Model.Adresses[i].Id')" style="font-size:12px">Delete</button>
+                                        </div>
+                                        <div class="col-12" style="padding-top:20px;">
+                                            <p>@Model.Adresses[i].Address</p>
+                                            <p>@Model.Adresses[i].Name @Model.Adresses[i].LastName</p>
+                                            <p>@Model.Adresses[i].Phone</p>
+                                            @if (!string.IsNullOrEmpty(Model.Adresses[i].Email))
+                                            {
+                                                <p>@Model.Adresses[i].Email</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (i + 1 < Model.Adresses.Count)
+                                {
+                                    <div class="col-5">
+                                        <div class="col-12" style="border: solid; border-color: darkgrey; padding: 10px; position: relative;">
+                                            <div style="position: absolute; top: 0px; right: 0px;">
+                                                <button id="editAddress" onclick="editAddress('@JsonConvert.SerializeObject(Model.Adresses[i + 1])')" style="font-size: 12px">Edit</button>
+                                                <button onclick="deleteAddress('@Model.Adresses[i + 1].Id')" style="font-size:12px">Delete</button>
+                                            </div>
+                                            <div style="padding-top:20px; ">
+                                                <p>@Model.Adresses[i + 1].Address</p>
+                                                <p>@Model.Adresses[i + 1].Name @Model.Adresses[i + 1].LastName</p>
+                                                <p>@Model.Adresses[i + 1].Phone</p>
+                                                @if (!string.IsNullOrEmpty(Model.Adresses[i + 1].Email))
+                                                {
+                                                    <p>@Model.Adresses[i + 1].Email</p>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+
+
+                    <div id="overlay" style="display: none;"></div>
+                    <!-- Form input for adding a new address -->
+                    <div id="addAddressForm" style="display: none;">
+                        <div class="card-form">
+                            <button id="closeFormButton" class="close-button">Close</button>
+                            <form id="addAddressFormm" asp-action="AddAddress" method="post" enctype="multipart/form-data">
+                                <div class="row d-flex justify-content-center align-items-center">
+                                    <div class="col-8">
+                                        <h3 class="mb-4 text-uppercase">Delivery Info</h3>
+
+                                        <div class="row">
+                                            <div class="col-md-5 mb-3">
+                                                <div class="form-outline">
+                                                    <label class="form-label" for="Name">Emri</label>
+                                                    <input type="text" id="Name" name="Address.Name" class="form-control form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5 mb-3">
+                                                <div class="form-outline">
+                                                    <label class="form-label" for="LastName">Mbiemri</label>
+                                                    <input type="text" id="LastName" name="Address.LastName" class="form-control form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-outline mb-3">
+                                            <label class="form-label" for="Address">Adresa</label>
+                                            <input type="text" id="Address" name="Address.Address" class="form-control form-control-lg" />
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-5 mb-3">
+                                                <label for="countrySelect">Shteti:</label>
+                                                <select id="countrySelect" name="Address.Country" class="select">
+                                                    <option value="kosove">Kosovë</option>
+                                                    <option value="shqiperi">Shqipëri</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-5 mb-3 d-flex ">
+                                                <label for="cityInput" style="padding-right:10px">Qyteti:</label>
+                                                <select id="citySelect" name="Address.City" class="select">
+                                                    <option value="0">Zgjedhni qytetin</option>
+                                                    <option value="Drenas">Drenas</option>
+                                                    <option value="Mitrovica">Mitrovica Veriore</option>
+                                                    <option value="Deçan">Deçan</option>
+                                                    <option value="Dragash">Dragash</option>
+                                                    <option value="Ferizaj">Ferizaj</option>
+                                                    <option value="Fushë">Fushë Kosovë</option>
+                                                    <option value="Graçanicë">Graçanicë</option>
+                                                    <option value="Gjakovë">Gjakovë</option>
+                                                    <option value="Gjilan">Gjilan</option>
+                                                    <option value="Hani i Elezit">Hani i Elezit</option>
+                                                    <option value="Istog">Istog</option>
+                                                    <option value="Junik">Junik</option>
+                                                    <option value="Kaçanik">Kaçanik</option>
+                                                    <option value="Kamenicë">Kamenicë</option>
+                                                    <option value="Klinë">Klinë</option>
+                                                    <option value="Kllokoti">Kllokoti</option>
+                                                    <option value="Leposaviq">Leposaviq</option>
+                                                    <option value="Lipjan">Lipjan</option>
+                                                    <option value="Malishevë">Malishevë</option>
+                                                    <option value="Mamushë">Mamushë</option>
+                                                    <option value="Mitrovicë">Mitrovicë</option>
+                                                    <option value="Novobërdë">Novobërdë</option>
+                                                    <option value="Obiliq">Obiliq</option>
+                                                    <option value="Partesh">Partesh</option>
+                                                    <option value="Pejë">Pejë</option>
+                                                    <option value="Podujevë">Podujevë</option>
+                                                    <option value="Prishtinë">Prishtinë</option>
+                                                    <option value="Prizren">Prizren</option>
+                                                    <option value="Rahovec">Rahovec</option>
+                                                    <option value="Ranillug">Ranillug</option>
+                                                    <option value="Skënderaj">Skënderaj</option>
+                                                    <option value="Suharekë">Suharekë</option>
+                                                    <option value="Shtërpcë">Shtërpcë</option>
+                                                    <option value="Shtime">Shtime</option>
+                                                    <option value="Viti">Viti</option>
+                                                    <option value="Vushtrri">Vushtrri</option>
+                                                    <option value="Zubin Potok">Zubin Potok</option>
+                                                    <option value="Zveçan">Zveçan</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-outline mb-3">
+                                            <label class="form-label" for="form3Example2">Telefoni</label>
+                                            <input type="text" id="Phone" name="Address.Phone" class="form-control form-control" />
+                                        </div>
+
+                                        <div class="form-outline mb-3">
+                                            <label class="form-label" for="form3Example2">Email</label>
+                                            <input type="text" id="Email" name="Address.Email" class="form-control form-control" />
+                                        </div>
+                                        <div class="col-3 d-flex justify-content-end pt-3">
+                                            <button type="submit" id="placeOrderButton" class="btn btn-success btn-lg ms-2" style="background-color: hsl(210, 100%, 50%)">Ruaj</button>
+                                            <input type="hidden" name="Address.UserId" value="0" />
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="updateAddressForm" style="display: none;">
+                        <div class="card-form">
+                            <button id="closeFormButton1" class="close-button">Close</button>
+                            @if (Model != null && Model.Adresses.Any())
+                            {
+                                <form asp-action="UpdateAddress" method="post" enctype="multipart/form-data">
+                                    <div class="row d-flex justify-content-center align-items-center">
+                                        <div class="col-8">
+                                            <h3 class="mb-4 text-uppercase">Delivery Info</h3>
+
+                                            <div class="row">
+                                                <div class="col-md-5 mb-3">
+                                                    <div class="form-outline">
+                                                        <label class="form-label" for="Name">Emri</label>
+                                                        <input asp-for="Adresses.First().Name" id="Name1" class="form-control form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 mb-3">
+                                                    <div class="form-outline">
+                                                        <label class="form-label" for="LastName">Mbiemri</label>
+                                                        <input asp-for="Adresses.First().LastName" id="LastName1" class="form-control form-control" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-outline mb-3">
+                                                <label class="form-label" for="Address">Adresa</label>
+                                                <input asp-for="Adresses.First().Address" id="Address1" class="form-control form-control" />
+                                            </div>
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-5 mb-3">
+                                                    <label for="countrySelect">Shteti:</label>
+                                                    <select asp-for="Adresses.First().Country" id="Country1" class="select">
+                                                        <option value="kosove">Kosovë</option>
+                                                        <option value="shqiperi">Shqipëri</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-5 mb-3 d-flex ">
+                                                    <label for="cityInput" style="padding-right:10px">Qyteti:</label>
+                                                    <select asp-for="Adresses.First().City" id="City1" class="select">
+                                                        <option value="0">Zgjedhni qytetin</option>
+                                                        <option value="Drenas">Drenas</option>
+                                                        <option value="Mitrovica">Mitrovica Veriore</option>
+                                                        <option value="Deçan">Deçan</option>
+                                                        <option value="Dragash">Dragash</option>
+                                                        <option value="Ferizaj">Ferizaj</option>
+                                                        <option value="Fushë">Fushë Kosovë</option>
+                                                        <option value="Graçanicë">Graçanicë</option>
+                                                        <option value="Gjakovë">Gjakovë</option>
+                                                        <option value="Gjilan">Gjilan</option>
+                                                        <option value="Hani i Elezit">Hani i Elezit</option>
+                                                        <option value="Istog">Istog</option>
+                                                        <option value="Junik">Junik</option>
+                                                        <option value="Kaçanik">Kaçanik</option>
+                                                        <option value="Kamenicë">Kamenicë</option>
+                                                        <option value="Klinë">Klinë</option>
+                                                        <option value="Kllokoti">Kllokoti</option>
+                                                        <option value="Leposaviq">Leposaviq</option>
+                                                        <option value="Lipjan">Lipjan</option>
+                                                        <option value="Malishevë">Malishevë</option>
+                                                        <option value="Mamushë">Mamushë</option>
+                                                        <option value="Mitrovicë">Mitrovicë</option>
+                                                        <option value="Novobërdë">Novobërdë</option>
+                                                        <option value="Obiliq">Obiliq</option>
+                                                        <option value="Partesh">Partesh</option>
+                                                        <option value="Pejë">Pejë</option>
+                                                        <option value="Podujevë">Podujevë</option>
+                                                        <option value="Prishtinë">Prishtinë</option>
+                                                        <option value="Prizren">Prizren</option>
+                                                        <option value="Rahovec">Rahovec</option>
+                                                        <option value="Ranillug">Ranillug</option>
+                                                        <option value="Skënderaj">Skënderaj</option>
+                                                        <option value="Suharekë">Suharekë</option>
+                                                        <option value="Shtërpcë">Shtërpcë</option>
+                                                        <option value="Shtime">Shtime</option>
+                                                        <option value="Viti">Viti</option>
+                                                        <option value="Vushtrri">Vushtrri</option>
+                                                        <option value="Zubin Potok">Zubin Potok</option>
+                                                        <option value="Zveçan">Zveçan</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-outline mb-3">
+                                                <label class="form-label" for="form3Example2">Telefoni</label>
+                                                <input asp-for="Adresses.First().Phone" id="Phone1" class="form-control form-control" />
+                                            </div>
+
+                                            <div class="form-outline mb-3">
+                                                <label class="form-label" for="form3Example2">Email</label>
+                                                <input asp-for="Adresses.First().Email" id="Email1" class="form-control form-control" />
+                                            </div>
+                                            <div class="d-flex justify-content-end pt-3">
+                                                <button type="submit" id="placeOrderButton1" class="btn btn-success btn-lg ms-2" style="background-color: hsl(210, 100%, 50%)">Ruaj</button>
+                                                <input asp-for="Adresses.First().UserId" type="hidden" value="0" />
+                                                <input asp-for="Adresses.First().Id" type="hidden" id="Id1" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div id="wishlist" class="content-section" style="display: @(ViewBag.ActiveSection == "wishlist" ? "block" : "none")">
+                    <div class="card mb-lg-5" style="border-radius: 25px; align-items: center;">
+                        <p>Lista e Deshirave</p>
+                    </div>
+                    <div class="row">
+                        @foreach (var item in Model.favoriteFragrances)
+                        {
+                            <div class="col-3">
+                                <img class="img-fluid" src="@item.PictureUrl" style="border: 1.5px solid gray; border-radius:10px">
+                                <button type="button" class="btn btn-primary" style="margin:5px" onclick="addToCart(@item.FragranceId)"> Shto në shportë</button>
+                                <span class="remove-icon" data-item-id="@item.FragranceId" onclick="removeFromFavorites(@item.FragranceId)">
+                                    <i class="fas fa-trash" style="color: white; text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;"></i>
+                                </span>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+                <div id="change-password" class="content-section" style="display: @(ViewBag.ActiveSection == "change-password" ? "block" : "none")">
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        // Handle change event on the "OrderStatus" dropdown
+        $("#OrderStatus").change(function () {
+            var selectedStatus = $(this).val(); // Get the selected option value
+
+            // Filter and display the items based on the selected status
+            $(".col-12.border.border-color").each(function () {
+                var status = $(this).find("p:contains('Në Proces')").length ? 0 : 1; // Assuming 'Në Procesim' corresponds to status 0
+                if (selectedStatus === '-1' || selectedStatus == status) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+        $(document).ready(function () {
+            // Handle input change event on the "Kerko" input
+            $("input[placeholder='Kerko']").on('input', function () {
+                filterItems(); // Call the function to filter items
+            });
+
+            // Function to filter and display items based on OrderId
+            function filterItems() {
+                var searchValue = $("input[placeholder='Kerko']").val(); // Get the search value
+
+                $(".col-12.border.border-color").each(function () {
+                    var orderId = $(this).find("p:contains('Numri i porosisë:')").text().split(': ')[1]; // Extract OrderId
+
+                    // Check if the OrderId matches the search value
+                    if (orderId.includes(searchValue)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        });
+    });
+    $(document).ready(function () {
+        // Hide all content sections initially
+        $(".content-section").hide();
+
+        // Show the initially active section
+        $("#" + "@ViewBag.ActiveSection").show();
+
+        // Handle click events on the <li> elements
+        $("li[data-content]").click(function () {
+            // Get the data-content attribute value
+            var contentId = $(this).data("content");
+
+            // Hide all content sections
+            $(".content-section").hide();
+
+            // Show the corresponding content section
+            $("#" + contentId).show();
+        });
+
+        // Handle click event on the "Add New" link
+        $("#addAddressLink").click(function (e) {
+            e.preventDefault(); // Prevent the default link behavior
+            $("#addAddressForm").show(); // Display the form
+        });
+    });
+    document.getElementById("closeFormButton").addEventListener("click", function () {
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("addAddressForm").style.display = "none";
+    });
+    document.getElementById("closeFormButton1").addEventListener("click", function () {
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("updateAddressForm").style.display = "none";
+    });
+    var countrySelect = document.getElementById("countrySelect");
+
+    // Add event listener to detect changes in the selected value
+    countrySelect.addEventListener("change", function () {
+        // Get the selected property name
+        var selectedCountry = countrySelect.value;
+
+        // Use the selected property name as needed, for example, update your model
+        // For demonstration purposes, let's assume you have a model object called 'data'
+        var data = {
+            kosove: { /* properties for Kosovo */ },
+            shqiperi: { /* properties for Albania */ }
+        };
+
+        // Access the selected property in the model
+        var selectedCountryData = data[selectedCountry];
+
+        // Use the selected property data as needed
+        console.log(selectedCountryData);
+    });
+    function editAddress(addressJson) {
+        var address = JSON.parse(addressJson); // Parse the JSON string back to an object
+        console.log(address);
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('updateAddressForm').style.display = 'block';
+        // Populate the form fields with the address details
+        document.getElementById('Id1').value = address.Id;
+        document.getElementById('Name1').value = address.Name;
+        document.getElementById('LastName1').value = address.LastName;
+        document.getElementById('Address1').value = address.Address;
+        document.getElementById('Country1').value = address.Country;
+        document.getElementById('City1').value = address.City;
+        document.getElementById('Phone1').value = address.Phone;
+        document.getElementById('Email1').value = address.Email;
+
+        // You can also set the UserId field if needed
+        document.getElementById('UserId').value = address.UserId;
+    }
+    function deleteAddress(id) {
+        if (confirm("Are you sure you want to delete this address?")) {
+            $.ajax({
+                type: "POST", // Use POST or GET, depending on your controller action
+                url: '/Users/DeleteAddress/' + id, // Replace with the actual URL
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    // Handle error, display an error message, or perform other actions
+                }
+            });
+        }
+    }
+    function removeFromFavorites(itemId) {
+        // Change the trash icon color to black
+        // icon.querySelector("i").style.color = "black";
+
+        // Send a request to the "RemoveFromFavorite" action in your Fragrance controller
+        console.log(itemId);
+        $.ajax({
+            type: "POST",
+            url: "/Fragrance/RemoveFromFavorite", // Adjust the URL as per your project structure
+            data: { id: itemId },
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
+
+                } else {
+                    // Handle errors or failure to remove the item from favorites
+                }
+            },
+            error: function () {
+                // Handle AJAX error
+            }
+        });
+    }
+    function addToCart(fragranceId) {
+        $.ajax({
+            type: "POST",
+            url: "/Fragrance/AddToCart",
+            data: { fragranceId: fragranceId },
+            success: function (result) {
+                updateCartItemCountViaAjax();
+                removeFromFavorites(fragranceId)
+            },
+            error: function (error) {
+                // Handle error (e.g., display an error message)
+            }
+        });
+    }
+    function updateCartItemCountViaAjax() {
+        $.ajax({
+            url: '@Url.Action("GetCartItemCount", "Fragrance")',
+            type: 'GET',
+            success: function (data) {
+                var cartItemCountElement = document.getElementById('cartItemCount');
+                if (cartItemCountElement) {
+                    cartItemCountElement.textContent = data;
+                }
+            },
+            error: function () {
+                // Handle error if necessary
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,221 @@
+﻿@model FirstScent.Models.FragranceTypeViewModel
+
+<style>
+    #malecard {
+        width: 13rem;
+        margin-right: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 20px
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 5%
+    }
+
+    #carouselMale-large {
+        display: block;
+    }
+
+    /* Styles for smaller screens */
+     #carouselMale-small {
+        display: none;
+    }
+
+    @@media (max-width: 600px) {
+        /* Styles for screens with a maximum width of 600px */
+        #carouselMale-large {
+            display: none;
+        }
+
+        #carouselMale-small {
+            display: block;
+        }
+    }
+</style>
+<div class="container-fluid">
+    <div class="row" style="background:whitesmoke">
+        <div class="col-12 d-flex justify-content-center">
+            <img src="/Images/@(Model.FragranceBrand)/@(Model.FragranceBrand).png" alt="Image 1">
+
+        </div>
+
+    </div>
+
+    <div class="row mt-lg-5">
+        <div class="col-12 d-flex justify-content-center">
+            <div class="card">
+                <div class="row no-gutters">
+                    <!-- Left side (Image) -->
+                    <div class="col-md-9 col-lg-8 order-md-2">
+                        <img src="/Images/@(Model.FragranceBrand)/@(Model.FragranceBrand)Poster.jpg" class="card-img" alt="Your Image Alt Text">
+                    </div>
+                    <div class="col-md-3 col-lg-4 order-sm-1">
+                        <div class="card-body mt-auto">
+                            <h5 class="card-title">THE ATELIER OF DREAMS</h5>
+                            <p class="card-text">Step into the enchanted world of DIOR Sauvage gifts..</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-lg-5 " style="padding-bottom: 20px">
+
+        <div class="col-12 d-flex justify-content-center">
+            <h3>Best Sellers</h3>
+        </div>
+
+        <div class="col-12">
+            <ul class="nav nav-tabs d-flex justify-content-center mt-lg-3" id="genderTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="male-tab" data-bs-toggle="tab" data-bs-target="#male-content" type="button" role="tab" aria-controls="male-content" aria-selected="true">Male</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="female-tab" data-bs-toggle="tab" data-bs-target="#female-content" type="button" role="tab" aria-controls="female-content" aria-selected="false">Female</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="genderTabContent">
+                <div class="tab-pane fade show active" id="male-content" role="tabpanel" aria-labelledby="male-tab">
+                    <div class="row mt-lg-5 " style="padding-bottom: 20px">
+                        <div class="col-12 ">
+                            <div id="carouselMale-large" class="carousel slide carousel-dark " data-bs-ride="carousel">
+                                <!-- Large screen carousel -->
+                                <div class="carousel-inner ">
+                                    @{
+                                        var maleFragrances = Model.Fragrances!.Where(f => f.Category == "Male").ToList();
+
+                                        for (int i = 0; i < maleFragrances.Count; i += 4)
+                                        {
+                                            var chunk = maleFragrances.Skip(i).Take(4).ToList();
+                                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                                <div class="row d-flex justify-content-center">
+                                                    @foreach (var fragrance in chunk)
+                                                    {
+                                                        var imageExtension = "jpg";
+                                                        string imagePath = "/Images/" + fragrance.Brand + "/" + fragrance.Name!.Replace(" ", "");
+                                                        if (File.Exists(imagePath + ".jpg"))
+                                                        {
+                                                            imageExtension = "jpg";
+                                                        }
+                                                        else if (File.Exists(imagePath + ".png"))
+                                                        {
+                                                            imageExtension = "png";
+                                                        }
+                                                        string imageUrl = imagePath + "." + imageExtension;
+
+                                                        <div class="col-3 d-flex justify-content-center align-items-center">
+                                                            <a href="@Url.Action("Details", "Fragrance", new { id = fragrance.Id })" style="color: black; text-decoration: none; text-align: center;">
+                                                                <img src="@imageUrl" alt="Image 1" style="width: 312px; height: 312px">
+                                                                <p style="font-weight: bold; font-size: 20px">@fragrance.Brand</p>
+                                                                <p>@fragrance.Name</p>
+                                                                <p>@fragrance.Price</p>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselMale-large" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselMale-large" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+
+                            <div id="carouselMale-small" class="carousel slide carousel-dark" data-bs-ride="carousel">
+                                <!-- Small screen carousel -->
+                                <div class="carousel-inner">
+                                    @{
+                                        maleFragrances = Model.Fragrances!.Where(f => f.Category == "Male").ToList();
+
+                                        for (int i = 0; i < maleFragrances.Count; i += 2)
+                                        {
+                                            var chunk = maleFragrances.Skip(i).Take(2).ToList();
+                                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                                <div class="row" style="display: flex;justify-content: center;">
+                                                    @foreach (var fragrance in chunk)
+                                                    {
+                                                        var imageExtension = "jpg";
+                                                        string imagePath = "/Images/" + fragrance.Brand + "/" + fragrance.Name!.Replace(" ", "");
+                                                        if (File.Exists(imagePath + ".jpg"))
+                                                        {
+                                                            imageExtension = "jpg";
+                                                        }
+                                                        else if (File.Exists(imagePath + ".png"))
+                                                        {
+                                                            imageExtension = "png";
+                                                        }
+                                                        string imageUrl = imagePath + "." + imageExtension;
+
+                                                        <div class="card" id="malecard" data-price="@fragrance.Price" data-name="@fragrance.Name">
+                                                            <a href="@Url.Action("Details", "Fragrance", new { id = fragrance.Id })" style="color: black; text-decoration: none; text-align: center;">
+                                                                <img class="card-img-top" src="@imageUrl" alt="Image">
+                                                                <div class="card-body">
+                                                                    <p style="font-weight: bold; font-size: 20px">@fragrance.Brand</p>
+                                                                    <p>@fragrance.Name</p>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselMale-small" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselMale-small" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+<script>
+    // JavaScript to initialize Bootstrap tabs
+    document.addEventListener('DOMContentLoaded', function () {
+        const genderTabs = new bootstrap.Tab(document.getElementById('male-tab'));
+        genderTabs.show();
+
+        // Initialize both male and female carousels
+        const carouselMale = new bootstrap.Carousel(document.getElementById('carouselMale'));
+        const carouselFemale = new bootstrap.Carousel(document.getElementById('carouselFemale'));
+
+        // Handle tab selection
+        document.getElementById('male-tab').addEventListener('click', function () {
+            carouselFemale.pause();
+            carouselMale.cycle();
+        });
+
+        document.getElementById('female-tab').addEventListener('click', function () {
+            carouselMale.pause();
+            carouselFemale.cycle();
+        });
+    });
+</script>

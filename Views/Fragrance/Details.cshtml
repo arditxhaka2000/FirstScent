@@ -1,0 +1,152 @@
+﻿@model FirstScent.Models.Fragrances
+
+<style>
+    .favorite-icon i.fas {
+        color: red;
+    }
+
+    #hiddenDiv {
+        display: none;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6" style="">
+            <div class="image-container" style="">
+                @if (!string.IsNullOrEmpty(Model.PictureUrl))
+                {
+                    <img class="image-fluid w-100" src="@Url.Content($"{Model.PictureUrl}")" alt="@Model.Name" />
+                }
+            </div>
+
+        </div>
+        <div class="col-lg-6 col-md-12 align-self-center">
+            <div class="option-buttons">
+                <h2>@Model.Name</h2>
+                <h3>@Model.Price€</h3>
+
+                <div class="col-12">
+                    <table>
+                        <tr>
+                            <td colspan="2"><button style="width: 100%; height: 100%;" class="btn btn-dark" onclick="addToCart(@Model.Id)">Add to Cart</button></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                @using (Html.BeginForm("BuyNow", "Users", new { itemId = Model.Id }, FormMethod.Post))
+                                {
+                                    <button type="submit" class="btn btn-outline-dark" style="width: 100%; height: 100%;">Buy Now</button>
+                                }
+                            </td>
+                            <td style="width: 50%;"><button type="button" class="btn btn-outline-dark" style="width: 100%; height: 100%;" data-item-id="@Model.Id" onclick="toggleFavorite(this, @Model.Id)"><i class="far fa-heart"></i> Add to Wishlist</button></td>
+                        </tr>
+                    </table>
+                </div>
+               
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="">
+            <h2 id="Description">Description</h2>
+            <div id="hiddenDiv">
+                <p>@Model.Description</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateCartItemCountViaAjax() {
+        $.ajax({
+            url: '@Url.Action("GetCartItemCount", "Fragrance")',
+            type: 'GET',
+            success: function (data) {
+                var cartItemCountElement = document.getElementById('cartItemCount');
+                if (cartItemCountElement) {
+                    cartItemCountElement.textContent = data;
+                }
+            },
+            error: function () {
+                // Handle error if necessary
+            }
+        });
+    }
+
+    function addToCart(fragranceId) {
+        $.ajax({
+            type: "POST",
+            url: "/Fragrance/AddToCart",
+            data: { fragranceId: fragranceId },
+            success: function (result) {
+                if (result.success) {
+                    updateCartItemCountViaAjax();
+                } else {
+                    var redirectUrl = "@Url.Action("Login", "Users")" + "?fragranceId=" + fragranceId;
+                    window.location.href = redirectUrl;
+                }
+            },
+            error: function (error) {
+
+            }
+        });
+    }
+    function toggleFavorite(icon, itemId) {
+        const heartIcon = icon.querySelector("i");
+
+        if (heartIcon.classList.contains("far")) {
+            console.log(itemId);
+            $.ajax({
+                type: "POST",
+                url: "/Fragrance/UpdateFavorite",
+                data: { id: itemId, update: '1' },
+                success: function (response) {
+                    if (response.success) {
+                        heartIcon.classList.remove("far");
+                        heartIcon.classList.add("fas");
+                    } else {
+                        // Handle any errors or failure to update the favorite column
+                    }
+                },
+                error: function () {
+                    // Handle AJAX error
+                }
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/Fragrance/UpdateFavorite",
+                data: { id: itemId, update: '0' },
+                success: function (response) {
+                    if (response.success) {
+                        heartIcon.classList.remove("fas");
+                        heartIcon.classList.add("far");
+                    } else {
+                        // Handle any errors or failure to remove the item from the favorite list
+                    }
+                },
+                error: function () {
+                    // Handle AJAX error
+                }
+            });
+        }
+    }
+    // Get reference to the Description paragraph and the hidden div
+    const descriptionParagraph = document.getElementById('Description');
+    const hiddenDiv = document.getElementById('hiddenDiv');
+
+    // Add click event listener to the Description paragraph
+    descriptionParagraph.addEventListener('click', function () {
+        // Toggle the display property of the hidden div
+        if (hiddenDiv.style.display === 'none') {
+            hiddenDiv.style.display = 'block';
+        } else {
+            hiddenDiv.style.display = 'none';
+        }
+    });
+</script>
+

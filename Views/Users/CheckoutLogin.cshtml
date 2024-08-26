@@ -1,0 +1,241 @@
+﻿@model FragranceTypeViewModel
+
+<style>
+    .card {
+        margin: auto;
+        max-width: 950px;
+        width: 90%;
+        box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 1rem;
+        border: transparent;
+    }
+
+    .form-group {
+        padding-left: 100px;
+        padding-right: 100px
+    }
+
+    .nav-pills .nav-link {
+        background: white;
+        color: black;
+    }
+
+        .nav-pills .nav-link.active {
+            background: white;
+            color: blue;
+        }
+
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12 breadcrumb-bar">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index","Hello")">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">CheckOut</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="card" style="padding:50px">
+        <div class="row tfs-header">
+            <div class="col-xs-12 d-flex justify-content-center m-2">
+                <h1>Secure checkout</h1>
+            </div>
+        </div>
+        <ul class="nav nav-pills  d-flex justify-content-center" style="">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#loginTab">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#SignUp">Guest</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="loginTab">
+                <form id="loginForm">
+                    <div class="col-auto">
+                        <label for="emailInput">Email</label>
+                        <input type="text" class="form-control" id="emailInput">
+                    </div>
+
+                    <div class="col-auto">
+
+                        <label for="passwordInput">Password</label>
+                        <input type="password" class="form-control" id="passwordInput">
+                    </div>
+
+                    <input type="hidden" id="cartInput" name="cart" value="@Model" />
+
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="SignUp">
+                <div class="col-12">
+                    <div class="card-header pb-0">
+                        <h2 class="card-title space ">Checkout</h2>
+                        <p class="card-text text-muted mt-4  space">SHIPPING DETAILS</p>
+                        <hr class="my-0">
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-between">
+                            <div class="col-lg-4 mt-0 col-md-auto col-sm-auto">
+                                <label for="NAME" class="text-muted mb-2"><b>Emri:</b></label>
+                                <input type="text" class="form-control form-control-sm" name="NAME" id="NAME" aria-describedby="helpId" required>
+                            </div>
+                            <div class="col-lg-4 col-md-auto col-sm-auto">
+                                <label for="NAME" class="text-muted mb-2"><b>Mbiemri:</b></label>
+                                <input type="text" class="form-control form-control-sm" name="LastName" id="LastName" aria-describedby="helpId" required>
+                            </div>
+
+                            <div class="col-lg-4 mt-0 col-md-auto col-sm-auto">
+                                <label for="NAME" class="text-muted mb-2"><b>Numri i Telefonit:</b></label>
+                                <input type="text" class="form-control form-control-sm" name="Phone" id="Phone" aria-describedby="helpId" required>
+                            </div>
+                            <div class="col-lg-4 col-md-auto col-sm-auto">
+                                <label for="NAME" class="text-muted mb-2"><b>Adresa</b></label>
+                                <input type="text" class="form-control form-control-sm" name="Address" id="Address" aria-describedby="helpId" required>
+                            </div>
+                            <div class="col-lg-4 col-md-auto col-sm-auto">
+                                <label for="NAME" class="text-muted mb-2"><b>Qyteti</b></label>
+                                <input type="text" class="form-control form-control-sm" name="City" id="City" aria-describedby="helpId" required>
+                            </div>
+                            <div class="col-lg-4 col-md-auto col-sm-auto">
+                                <label for="NAME" class="text-muted mb-2"><b>Shteti</b></label>
+                                <input type="text" class="form-control form-control-sm" name="Country" id="Country" aria-describedby="helpId" required>
+                            </div>
+                            <div class="col-lg-4 col-md-auto col-sm-auto">
+                                <label for="NAME" class="text-muted mb-2"><b>E-maili:</b></label>
+                                <input type="text" class="form-control form-control-sm" name="GEmail" id="GEmail" aria-describedby="helpId" required>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="card-header card-2">
+                        <p class="card-text text-muted mt-md-4  mb-2 space">YOUR ORDER <span class=" small text-muted ml-2 cursor-pointer">EDIT SHOPPING BAG</span> </p>
+                        <hr class="my-2">
+                    </div>
+                    <div class="card-body pt-0">
+
+                        @foreach (var item in Model.Fragrances)
+                        {
+                            <div class="row justify-content-between">
+                                <div class="col-auto col-md-7">
+                                    <div class="media flex-column flex-sm-row">
+                                        <img class="img-fluid" src="@item.PictureUrl" width="62" height="62">
+                                        <div class="media-body  my-auto">
+                                            <div class="row ">
+                                                <div class="col-auto"><p class="mb-0"><b>@item.Name</b></p><small class="text-muted">@item.Description</small></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pl-0 flex-sm-col col-auto  my-auto"> <p class="boxed-1">Sasia: 1</p></div>
+                                <div class="pl-0 flex-sm-col col-auto  my-auto"><p><b>@(item.Price) EUR</b></p></div>
+                            </div>
+                            <hr class="my-2">
+                        }
+
+                        <div class="row ">
+                            <div class="col">
+                                <div class="row justify-content-between">
+                                    <div class="col-4"><p class="mb-1"><b>Subtotal</b></p></div>
+                                    <div class="flex-sm-col col-auto"><p class="mb-1"><b>@(Model.Fragrances.First().Price) EUR</b></p></div>
+                                </div>
+                                <div class="row justify-content-between">
+                                    <div class="col"><p class="mb-1"><b>Shipping</b></p></div>
+                                    <div class="flex-sm-col col-auto"><p class="mb-1"><b>0 EUR</b></p></div>
+                                </div>
+                                <div class="row justify-content-between">
+                                    <div class="col-4"><p><b>Total</b></p></div>
+                                    <div class="flex-sm-col col-auto"><p class="mb-1"><b>@(Model.Fragrances.First().Price) EUR</b></p> </div>
+                                </div><hr class="my-0">
+                            </div>
+                        </div>
+                        <div class="row mb-5 mt-4 ">
+                            <div class="col-12 d-flex justify-content-center">
+                                <button id="guestSubmitBtn" class="btn btn-block btn-outline-primary btn-lg">Porosit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $('#loginForm').submit(function (e) {
+        e.preventDefault();
+        var email = $('#emailInput').val();
+        var password = $('#passwordInput').val();
+        var cart = $('#cartInput').val();
+        $.ajax({
+            url: "@Url.Action("CheckUserCheckoutDirectBuy", "Users")",
+            type: 'POST',
+            data: { email: email, password: password, itemId: cart },
+            success: function (response) {
+                var cartList = response.cartList;
+                console.log(cartList);
+                var redirectUrl = "@Url.Action("CartCheckOutDirectBuy", "Fragrance")";
+                redirectUrl += "?cartList=" + JSON.stringify(cartList); // Pass cartList as a query parameter
+                window.location.href = redirectUrl;
+
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+        // Attach click event to the button
+        $('#guestSubmitBtn').click(function () {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Collect form data
+            var email = $('#GEmail').val();
+            var lastName = $('#LastName').val();
+            var phone = $('#Phone').val();
+            var name = $('#NAME').val();
+            var address = $('#Address').val();
+            var city = $('#City').val();
+            var country = $('#Country').val();
+            console.log(email, lastName, address, phone, country, city);
+
+            // AJAX call
+            $.ajax({
+                url: "@Url.Action("GuestCheckOut", "Users")",
+                type: "POST",
+                data: {
+                    email: email,
+                    name: name,
+                    lastName: lastName,
+                    address: address,
+                    phone: phone,
+                    country: country,
+                    city: city
+                },
+                success: function (data) {
+                    if (!data.success) {
+                        // Display the error message if the email already exists
+                        $('#signupEmailError').text(data.message);
+                        console.log(data.message);
+                    } else {
+                        // No error, submit the form
+                        $('#guestForm').submit();
+                    }
+                }
+            });
+        });
+    });
+    $('#loginSignupTabContent a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var targetTab = $(e.target).attr('href');
+        $(targetTab).addClass('show active');
+        $(targetTab).siblings().removeClass('show active');
+    });
+</script>

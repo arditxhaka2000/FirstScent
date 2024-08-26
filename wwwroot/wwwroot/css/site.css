@@ -1,0 +1,53 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.mainDiv {
+    display: flex;
+}
+
+
+.frgImage {
+    width: auto;
+    height: 250px;
+    display: flex;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+}
+
+.nav-link {
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+.navbar-brand {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.nav-item-options {
+    margin-left: auto;
+}
+
+
+.btn {
+    margin-top: 10px;
+}

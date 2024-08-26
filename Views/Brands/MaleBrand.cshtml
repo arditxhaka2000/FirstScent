@@ -1,0 +1,188 @@
+﻿@model FirstScent.Models.FragranceTypeViewModel
+
+<style>
+    #malecard {
+        width: 18rem;
+        margin-right: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 20px
+    }
+
+
+    @@media (max-width: 600px) {
+        #malecard {
+            width: 13em;
+            margin-right: 1px;
+            margin-left: 1px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+<div class="container">
+    <div class="row" style="background:whitesmoke">
+        <div class="col-12 d-flex justify-content-center">
+            <img src="/Images/@(Model.FragranceBrand)/@(Model.FragranceBrand).png" alt="Image 1">
+
+        </div>
+
+    </div>
+
+    <div class="row mt-lg-5">
+        <div class="col-12 d-flex justify-content-center">
+            <div class="card">
+                <div class="row no-gutters">
+                    <!-- Left side (Image) -->
+                    <div class="col-md-9 col-lg-8 order-md-2">
+                        <img src="/Images/@(Model.FragranceBrand)/@(Model.FragranceBrand)Poster.jpg" class="card-img" alt="Your Image Alt Text">
+                    </div>
+                    <div class="col-md-3 col-lg-4 order-sm-1">
+                        <div class="card-body mt-auto">
+                            <h5 class="card-title">THE ATELIER OF DREAMS</h5>
+                            <p class="card-text">Step into the enchanted world of DIOR Sauvage gifts..</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-lg-5 " style="padding-bottom: 20px">
+
+        <div class="col-12 d-flex justify-content-center">
+            <h3>Best Sellers</h3>
+        </div>
+
+        <div class="col-12">
+            <select id="sortSelect" name="sortingOption">
+                <option value="BestSeller">Best Seller</option>
+                <option value="PriceHighToLow">Price High to Low</option>
+                <option value="PriceLowToHigh">Price Low to High</option>
+                <option value="NameAToZ">Product Name A to Z</option>
+            </select>
+
+
+            <div class="tab-content" id="fragranceContainer">
+                <div class="row mt-lg-5 d-flex justify-content-center" style="padding-bottom: 20px">
+                    @{
+                        var maleFragrances = Model.Fragrances!.Where(f => f.Category == "Male").ToList();
+
+                        foreach (var fragrance in maleFragrances)
+                        {
+                            <div class="card" id="malecard" data-price="@fragrance.Price" data-name="@fragrance.Name">
+
+                                <a href="@Url.Action("Details", "Fragrance", new { id = fragrance.Id })" style="color: black; text-decoration: none; text-align: center;">
+                                    <img class="card-img-top" src="@fragrance.PictureUrl" alt="Image">
+                                    <div class="card-body">
+                                        <p style="font-weight: bold; font-size: 20px">@Model.FragranceBrand</p>
+                                        <p>@fragrance.Name</p>
+                                        <p>@fragrance.Price€</p>
+                                    </div>
+
+                                </a>
+                            </div>
+                        }
+                    }
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // JavaScript to initialize Bootstrap tabs
+    document.addEventListener('DOMContentLoaded', function () {
+        const genderTabs = new bootstrap.Tab(document.getElementById('male-tab'));
+        genderTabs.show();
+
+        // Initialize both male and female carousels
+        const carouselMale = new bootstrap.Carousel(document.getElementById('carouselMale'));
+        const carouselFemale = new bootstrap.Carousel(document.getElementById('carouselFemale'));
+
+        // Handle tab selection
+        document.getElementById('male-tab').addEventListener('click', function () {
+            carouselFemale.pause();
+            carouselMale.cycle();
+        });
+
+        document.getElementById('female-tab').addEventListener('click', function () {
+            carouselMale.pause();
+            carouselFemale.cycle();
+        });
+    });
+
+    $("#sortSelect").on("change", function () {
+        var selectedOption = $(this).val();
+        var brandName = "@Model.FragranceBrand";
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Sort", "Brands")",
+            data: {
+                sortingOption: selectedOption,
+                brandName: brandName,
+                category: "Male",
+
+            },
+            success: function (result) {
+                // Update the contents of the #fragranceContainer with the sorted results
+                displaySortedFragrances(result);
+            }
+        });
+    });
+
+    function displaySortedFragrances(fragrances) {
+        $("#fragranceContainer").empty();
+        function ImageExist(url) {
+            var img = new Image();
+            img.src = url;
+            return img.height != 0;
+        }
+
+        // Add a single row outside the forEach loop
+        $("#fragranceContainer").append('<div class="row mt-lg-5 d-flex justify-content-center" style="padding-bottom: 20px">');
+
+        fragrances.forEach(function (fragrance) {
+            if (fragrance.name) {
+                var imagePath = "/Images/" + "@Model.FragranceBrand" + "/" + fragrance.name.replace(/ /g, '');
+
+                if (ImageExist(imagePath + ".jpg")) {
+                    imageExtension = "jpg";
+                } else if (ImageExist(imagePath + ".png")) {
+                    imageExtension = "png";
+                }
+
+                var imageUrl = imagePath + "." + imageExtension;
+
+                var fragranceHtml = `
+                                            <div class="card" id="malecard" data-price="${fragrance.price}" data-name="${fragrance.name}">
+                                            <a href="/Fragrance/Details/${fragrance.id}" style="color: black; text-decoration: none; text-align: center;">
+                                                    <img class="card-img-top" src="${imageUrl}" alt="Image">
+                                                         <div class="card-body">
+                                                <p style="font-weight: bold; font-size: 20px">@Model.FragranceBrand</p>
+                                                <p>${fragrance.name}</p>
+                                                    <p>${fragrance.price}€</p>
+                                                    </div>
+                                            </a>
+                                    </div>`;
+
+                $("#fragranceContainer .row").append(fragranceHtml);
+            }
+        });
+
+        // Close the row
+        $("#fragranceContainer").append('</div>');
+
+    }
+
+</script>

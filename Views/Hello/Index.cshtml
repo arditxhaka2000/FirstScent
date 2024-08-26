@@ -1,0 +1,388 @@
+﻿@model FirstScent.Models.FragranceTypeViewModel
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+<style>
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 5%
+    }
+
+    #malecard {
+        width: 18rem;
+        margin-right: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 20px;
+        border: none;
+    }
+
+    @@media(max-width:600px) {
+        #malecard {
+            width: 12rem
+        }
+    }
+
+    #carouselBrand-large, #carouselMale-large, #carouselFemale-large {
+        display: block;
+    }
+
+    /* Styles for smaller screens */
+    #carouselBrand-small, #carouselMale-small, #carouselFemale-small {
+        display: none;
+    }
+
+    @@media (max-width: 600px) {
+        /* Styles for screens with a maximum width of 600px */
+        #carouselBrand-large, #carouselMale-large, #carouselFemale-large {
+            display: none;
+        }
+
+        #carouselBrand-small, #carouselMale-small, #carouselFemale-small {
+            display: block;
+        }
+    }
+
+    .nav-tabs .nav-link {
+        color: black; /* Change this to your desired non-active tab color */
+    }
+
+        .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            font-weight: bold;
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="row mb-5">
+        <div class="col-12" @* style="padding-right:100px; padding-left:100px" *@>
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="card">
+                            <div class="row no-gutters">
+                                <!-- Left side (Image) -->
+                                <div class="col-md-9 col-lg-8 order-md-2">
+                                    <img src="/Images/DiorPoster.jpg" class="card-img" alt="Your Image Alt Text">
+                                </div>
+                                <div class="col-md-3 col-lg-4 order-sm-1">
+                                    <div class="card-body mt-auto">
+                                        <h5 class="card-title">THE ATELIER OF DREAMS</h5>
+                                        <p class="card-text">Step into the enchanted world of DIOR Sauvage gifts..</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* <div class="carousel-item">
+                    <div class="card">
+                    <div class="row no-gutters">
+                    <div class="col-md-10 ">
+                    <img src="/Images/DiorPoster2.jpg" class="card-img" alt="Your Image Alt Text">
+                    </div>
+                    <!-- Right side (Image) -->
+                    <div class="col-md-2">
+                    <div class="card-body">
+                    <h5 class="card-title">THE ATELIER OF DREAMS</h5>
+                    <p class="card-text">Step into the enchanted world of DIOR Sauvage gifts..</p>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="carousel-item">
+                    <div class="card">
+                    <div class="row no-gutters">
+                    <div class="col-md-10">
+                    <img src="/Images/creedaventus.jpg" class="card-img" alt="Your Image Alt Text">
+                    </div>
+                    <!-- Right side (Image) -->
+                    <div class="col-md-2">
+                    <div class="card-body">
+                    <h5 class="card-title">THE ATELIER OF DREAMS</h5>
+                    <p class="card-text">Step into the enchanted world of DIOR Sauvage gifts..</p>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div> *@
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                @* <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div> *@
+            </div>
+        </div>
+    </div>
+    @*   <div class="row mt-lg-5 " style="padding-bottom: 20px">
+
+    <div class="col-12 d-flex justify-content-center">
+    <h3>Best Sellers</h3>
+    </div>
+
+    <div class="col-12">
+    <div id="carouselBestSeller" class="carousel slide carousel-dark" data-bs-ride="carousel">
+    <div class="carousel-inner">
+    <div class="carousel-item active">
+    <div class="row d-flex justify-content-center">
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/FirstSlide.png" class="d-block w-100 h-100" alt="Image 1">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/SecondSlide.png" class="d-block w-100 h-100" alt="Image 2">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/ThirdSlide.png" class="d-block w-100 h-100" alt="Image 3">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/FirstSlide.png" class="d-block w-100 h-100" alt="Image 4">
+    </div>
+    </div>
+    </div>
+    <div class="carousel-item">
+    <div class="row d-flex justify-content-center">
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/FirstSlide.png" class="d-block w-100 h-100" alt="Image 1">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/SecondSlide.png" class="d-block w-100 h-100" alt="Image 2">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/ThirdSlide.png" class="d-block w-100 h-100" alt="Image 3">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/FirstSlide.png" class="d-block w-100 h-100" alt="Image 4">
+    </div>
+    </div>
+    </div>
+    <div class="carousel-item">
+    <div class="row d-flex justify-content-center">
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/FirstSlide.png" class="d-block w-100 h-100" alt="Image 1">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/SecondSlide.png" class="d-block w-100 h-100" alt="Image 2">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/ThirdSlide.png" class="d-block w-100 h-100" alt="Image 3">
+    </div>
+    <div class="col-sm-3 col-lg-2">
+    <img src="/Images/FirstSlide.png" class="d-block w-100 h-100" alt="Image 4">
+    </div>
+    </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselBestSeller" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselBestSeller" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+    </button>
+    </div>
+
+    </div>
+    </div>
+
+
+    </div> *@
+
+    <div class="row mt-lg-5" style="padding-bottom: 20px">
+        <div class="col-12 d-flex justify-content-center">
+            <h3>Best Brands</h3>
+
+        </div>
+    </div>
+
+    <div class="row mt-lg-5">
+        <div class="col-12">
+            <div id="owl-carousel-brand" class="owl-carousel owl-theme">
+                @{
+                    @foreach (var brand in Model.Brand)
+                    {
+                        <div class="item d-flex justify-content-center">
+                            <a href="@Url.Action("Index", "Brands", new { brandName = brand.Text })">
+                                <img src="/Images/@(brand.Text)/@(brand.Text).png" alt="Image 1" style="width:150px">
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+            <script type="text/javascript">
+                $('#owl-carousel-brand').owlCarousel({
+                    loop: true,
+                    margin: 10,
+                    nav: true,
+                    responsive: {
+                        0: {
+                            items: 2
+                        },
+                        600: {
+                            items: 3
+                        },
+                        1000: {
+                            items: 5
+                        }
+                    }
+                })
+            </script>
+        </div>
+    </div>
+
+    <div class="row mt-lg-5 " style="padding-bottom: 20px">
+
+        <div class="col-12 d-flex justify-content-center mb-3">
+            <h3>Best Sellers</h3>
+        </div>
+
+        <div class="col-12">
+            <ul class="nav nav-tabs d-flex justify-content-center mt-lg-3" id="genderTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="male-tab" data-bs-toggle="tab" data-bs-target="#male-content" type="button" role="tab" aria-controls="male-content" aria-selected="true">Male</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="female-tab" data-bs-toggle="tab" data-bs-target="#female-content" type="button" role="tab" aria-controls="female-content" aria-selected="false">Female</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="genderTabContent">
+                <div class="tab-pane fade show active" id="male-content" role="tabpanel" aria-labelledby="male-tab">
+                    <div class="row mt-lg-5 " style="padding-bottom: 20px">
+                        <div class="col-12 ">
+                            <div id="owl-carousel-male" class="owl-carousel owl-theme">
+                                @{
+                                    var maleFragrances = Model.Fragrances!.Where(f => f.Category == "Male").ToList();
+
+                                    foreach (var fragrance in maleFragrances)
+                                    {
+                                        <div class="item d-flex justify-content-center">
+                                            <a href="@Url.Action("Details", "Fragrance", new { id = fragrance.Id })" style="color: black; text-decoration: none; text-align: center;">
+                                                <img src="@fragrance.PictureUrl" alt="Image" style="width: 100%; max-width: 312px; height: auto;">
+                                                <p style="font-weight: bold; font-size: 20px">@fragrance.Brand</p>
+                                                <p>@fragrance.Name</p>
+                                                <p>@fragrance.Price€</p>
+                                            </a>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <script type="text/javascript">
+                                $('#owl-carousel-male').owlCarousel({
+                                    loop: true,
+                                    margin: 10,
+                                    nav: true,
+                                    responsive: {
+                                        0: {
+                                            items: 2
+                                        },
+                                        600: {
+                                            items: 3
+                                        },
+                                        1000: {
+                                            items: 5
+                                        }
+                                    }
+                                })
+                            </script>
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="female-content" role="tabpanel" aria-labelledby="female-tab">
+                <!-- Female carousel content -->
+                <div id="owl-carousel-female" class="owl-carousel owl-theme">
+                    @{
+                        var femaleFragrances = Model.Fragrances!.Where(f => f.Category == "Female").ToList();
+
+                        foreach (var fragrance in femaleFragrances)
+                        {
+                            <div class="item d-flex justify-content-center">
+                                <a href="@Url.Action("Details", "Fragrance", new { id = fragrance.Id })" style="color: black; text-decoration: none; text-align: center;">
+                                    <img src="@fragrance.PictureUrl" alt="Image" style="width: 100%; max-width: 312px; height: auto;">
+                                    <p style="font-weight: bold; font-size: 20px">@fragrance.Brand</p>
+                                    <p>@fragrance.Name</p>
+                                    <p>@fragrance.Price€</p>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+                <script type="text/javascript">
+                    $('#owl-carousel-female').owlCarousel({
+                        loop: true,
+                        margin: 10,
+                        nav: true,
+                        responsive: {
+                            0: {
+                                items: 2
+                            },
+                            600: {
+                                items: 3
+                            },
+                            1000: {
+                                items: 5
+                            }
+                        }
+                    })
+                </script>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-lg-5 ">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <h4>About the Fragrance Shop</h4>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-8">
+                <p>Welcome to The Fragrance Shop, your ultimate destination for high-quality perfumes and colognes. We offer a vast selection of fragrances for men and women, featuring top brands such as Dior, Versace, Paco Rabanne, and more. Fragrance match, our online quiz makes it easy to find your perfect scent, whether you prefer fresh and floral scents or something more exotic and sensual, we have something for everyone. Our commitment to quality extends beyond our products to our exceptional customer service. Our friendly and knowledgeable team is always on hand to answer your questions and provide advice on choosing the right fragrance. We also offer free standard delivery on all orders over £40 and easy returns and exchanges, so you can shop with confidence. Experience the joy of finding your perfect scent at The Fragrance Shop today! </p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    // JavaScript to initialize Bootstrap tabs
+    document.addEventListener('DOMContentLoaded', function () {
+        const genderTabs = new bootstrap.Tab(document.getElementById('male-tab'));
+        genderTabs.show();
+
+        $('#male-tab').click(function () {
+            // Show male carousel
+            $('#owl-carousel-male').show();
+
+            // Hide female carousel
+            $('#owl-carousel-female').hide();
+        });
+
+        $('#female-tab').click(function () {
+            // Show female carousel
+            $('#owl-carousel-female').show();
+
+            // Hide male carousel
+            $('#owl-carousel-male').hide();
+        });
+    });
+</script>
